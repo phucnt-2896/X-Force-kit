@@ -1,7 +1,8 @@
 {
   "context": {
     "projectRuleContentFiles": [
-      "./front-end-development-rules.md"
+      "./.opencode/rules/front-end-development-rules.md",
+      "./.opencode/rules/project-context-rules.md"
     ],
     "responseLanguage": "vn",
     "codingLevel": "junior",

@@ -7,6 +7,10 @@ description: "Create implementation plans with research, codebase analysis, and 
 
 Lightweight planning workflow: Resolve Spec Context → Scope Challenge → Research → Write Plan → Validate.
 
+## Language
+
+**Important** Write the plan in english
+
 ## How It Works
 
 ```mermaid
