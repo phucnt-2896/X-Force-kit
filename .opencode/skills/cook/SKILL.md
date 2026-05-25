@@ -1,6 +1,7 @@
 ---
 name: cook
 description: "Implement features, plans, and fixes from plan files or task descriptions. Use for code implementation after planning is done."
+argument-hint: "<plan path OR task description> [--fast|--no-test]"
 ---
 
 # Cook
@@ -11,9 +12,51 @@ Implement: Load plan → Implement phases → Test → Review → Finalize.
 cook <plan path OR task description>
 ```
 
-**HARD GATE:** Do NOT write implementation code until a plan exists.
+## Modes
+
+| Flag        | Behavior                                                           |
+| ----------- | ------------------------------------------------------------------ |
+| _(default)_ | Full workflow: scout → implement → test → review → finalize        |
+| `--fast`    | Skip scout (assumes plan has context), implement → test → finalize |
+| `--no-test` | Skip test step. Warning surfaced at finalize.                      |
+
+<HARD-GATE-PLAN-FIRST>
+Do NOT write implementation code until a plan exists.
 This applies regardless of task simplicity — "simple" tasks waste the most time from unexamined assumptions.
 User override: if user explicitly says "just code it" or "skip planning", respect their instruction.
+</HARD-GATE-PLAN-FIRST>
+
+<HARD-GATE-SCOUT-FIRST>
+Before planning OR asking clarifying questions, scan the codebase. Mandatory scout outputs:
+1. Project type, language(s), framework(s)
+2. Existing modules/files relevant to the task
+3. Current patterns/conventions for similar features (so the implementation matches them)
+4. Existing docs in `./docs/` and any in-flight plans in `./plans/` covering this area
+5. Public APIs, schemas, contracts that the task could affect
+
+State a 3-6 bullet codebase-context summary to the user before asking questions. Skip ONLY when input is a `plan.md`/`phase-*.md` path (the plan already encodes scout output).
+</HARD-GATE-SCOUT-FIRST>
+
+<HARD-GATE-SIDE-EFFECT-FREE>
+Side-Effect Check (mandatory, all phases)
+
+After review passes, verify:
+
+1. No existing business logic regression — check callers of changed functions
+2. No new lint/type/build errors anywhere in the repo
+3. Public contracts unchanged unless intentional (function signatures, API responses, DB schemas, env vars)
+   If side effect detected → STOP. Present to user:
+
+- What broke (file, test, workflow)
+- Why (1-line cause)
+- Options: revert, update dependents, add compatibility shim, accept regression
+  </HARD-GATE-SIDE-EFFECT-FREE>
+
+**Anti-skip traps:**
+
+- "Too simple to plan" → Simple tasks have hidden complexity. Plan takes 30 seconds.
+- "I already know how" → Knowing ≠ planning. Write it down.
+- "User wants speed" → Fastest path = plan → implement → done. Not: implement → debug → rewrite.
 
 ## Workflow
 
@@ -33,18 +76,39 @@ flowchart TD
 
 ### 1. Scout First
 
-Scan codebase for project type, existing patterns, relevant files.
+Scan codebase. Mandatory outputs before any implementation:
 
-### 2. Per-Phase Implementation
+1. Project type, language(s), framework(s)
+2. Existing modules/files relevant to the task
+3. Current patterns/conventions (so implementation matches them)
+4. Existing docs in `docs/` and any in-flight plans in `plans/` covering this area
+   State a 3-6 bullet codebase-context summary before proceeding.
+   Skip ONLY when input is a `plan.md`/`phase-*.md` path (the plan already encodes scout output).
 
-- Read phase file → implement steps sequentially
-- Run typecheck/build after each phase
+### 2. Resolve Context
 
-### 3. Test
+Before implementing, verify context sources exist:
+
+1. If input is a plan path → load plan, check if it references a spec file. Carry spec constraints forward.
+2. If input is a task description → check `plans/` for matching plans. If none, redirect to `plan` skill.
+3. If plan references a spec → read spec's scope, business goal, and success criteria. These become acceptance criteria for the review step.
+   Do NOT implement from a task description without a plan. Redirect: "Run `/plan` first."
+
+### 3. Per-Phase Implementation
+
+For each phase:
+
+1. Read phase file → understand requirements, related files, success criteria
+2. Implement steps sequentially
+3. Run typecheck/build after completion
+4. If phase has `## Test Strategy` (TDD mode) → run phase tests before moving on
+5. Verify success criteria checkboxes can be checked
+
+### 4. Test
 
 Delegate to `tester` subagent. 100% tests must pass.
 
-### 4. Code Review (max 3 cycles)
+### 5. Code Review (max 3 cycles)
 
 Delegate to `code-reviewer` subagent. Run review cycle:
 
@@ -74,7 +138,7 @@ LOOP:
 
 Warnings and suggestions: fix if time allows, not blocking.
 
-### 5. Finalize
+### 6. Finalize
 
 1. **Sync-back ALL phases** — sweep every `phase-*.md` in plan dir, mark completed items `[ ] → [x]` based on work done (including earlier phases, not just current). Update `plan.md` status/progress from actual checkbox state.
 2. Update plan status to `completed`
@@ -90,5 +154,6 @@ Warnings and suggestions: fix if time allows, not blocking.
 
 ## Workflow Position
 
-**Typically follows:** `/plan` (execute a plan), `/brainstorm` (implement agreed solution), `/specs` (interview user until can make a plan)
-**Typically precedes:** `/code-review` (review after implementation)
+**Typically follows:** `/plan` (execute a plan), `/brainstorm` (implement agreed solution), `/spec` (interview user → spec → plan → cook)
+**Typically precedes:** `/code-review` (standalone review), `/journal` (session wrap-up)
+**Related:** `/fix` (alternative for bug fixes), `/debug` (when implementation hits unexpected behavior)

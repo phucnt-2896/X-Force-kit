@@ -62,7 +62,7 @@ export const XForcePlugin: Plugin = async ({ directory, worktree, client }) => {
         if (filePath && isPathBlocked(path.resolve(worktree, filePath), worktree, blockedDirs)) {
           log.warn("Blocked Read call", { filePath });
           throw new Error(
-            `Cannot read "${filePath}" — file is inside a generated directory (${blockedDirs.find((d) => filePath.includes(d))}).`
+            `Can't read (${blockedDirs.find((d) => filePath.includes(d))}). Update .opencode/x-force.config.js to allow these directories`
           );
         }
         return;
@@ -73,7 +73,7 @@ export const XForcePlugin: Plugin = async ({ directory, worktree, client }) => {
         if (dirPath && isPathBlocked(path.resolve(worktree, dirPath), worktree, blockedDirs)) {
           log.warn("Blocked Glob/Grep call", { tool, path: dirPath });
           throw new Error(
-            `Cannot search inside "${dirPath}" — directory is generated (${blockedDirs.find((d) => dirPath.includes(d))}).`
+            `Can't read (${blockedDirs.find((d) => dirPath.includes(d))}). Update .opencode/x-force.config.js to allow these directories`
           );
         }
         return;
@@ -84,7 +84,7 @@ export const XForcePlugin: Plugin = async ({ directory, worktree, client }) => {
         if (command && blockedDirPattern.test(command)) {
           log.warn("Blocked bash call referencing generated dir", { command });
           throw new Error(
-            `Command references a generated directory (${blockedDirs.find((d) => command.includes(d))}). Use the Read tool for source files instead.`
+            `Can't read (${blockedDirs.find((d) => command.includes(d))}). Update .opencode/x-force.config.js to allow these directories`
           );
         }
         return;
@@ -127,9 +127,8 @@ export const XForcePlugin: Plugin = async ({ directory, worktree, client }) => {
       
       ## Help full skill implementation and testing
       You MUST use "pest-testing" skill to write the test, "laravel-best-practice" skill to write the code in BE Laravel, "inertia-react-development" skill to write the code in FE React, and "code-review" skill to review the code.
-      
 
-      ## Project rule 
+      ## Project rule
         ${projectRules}
        </EXTREMELY_IMPORTANT>
       `;

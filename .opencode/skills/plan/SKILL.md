@@ -1,11 +1,12 @@
 ---
 name: plan
 description: "Create implementation plans with research, codebase analysis, and structured phases. Use for feature planning, architecture design, or breaking down complex tasks before coding."
+argument-hint: "[task] [--fast|--standard|--hard|--deep] [--tdd] OR [archive]"
 ---
 
 # Plan
 
-Lightweight planning workflow: Resolve Spec Context → Scope Challenge → Research → Write Plan → Validate.
+Lightweight planning workflow: Resolve Spec Context → Cross-Plan Scan → Scope Challenge → Workflow Mode Selection (Fast, Standard, Hard, Deep) [with optional TDD] → Research → Write Plan → Validation & Inline Red-Team → Consistency Check → Handoff.
 
 ## Language
 
@@ -15,15 +16,20 @@ Lightweight planning workflow: Resolve Spec Context → Scope Challenge → Rese
 
 ```mermaid
 flowchart TD
-    A[Resolve Spec Context] --> B[Scope Challenge]
-    B --> C{Mode?}
-    C -->|fast| D[Skip Research]
-    C -->|full| E[Research + Codebase]
-    D --> F[Write Plan via planner]
-    E --> F
-    F --> G[Validation Checklist]
-    G --> H[Consistency Check]
-    H --> I[Handoff to cook]
+    A[Resolve Spec Context] --> B[Cross-Plan Scan]
+    B --> C[Scope Challenge]
+    C --> D{Mode?}
+    D -->|fast| E[Skip Research]
+    D -->|standard/hard/deep| F[Research + Codebase]
+    E --> G[Write Plan via planner]
+    F --> G
+    G --> H{--tdd?}
+    H -->|Yes| I[Inject Test Strategy]
+    H -->|No| J[Standard Phase Template]
+    I --> K[Validation & Red-Team]
+    J --> K
+    K --> L[Consistency Check]
+    L --> M[Handoff to cook]
 ```
 
 ## Step 0: Resolve Spec Context
@@ -61,30 +67,51 @@ If a spec file is found, the planner MUST extract and carry forward:
 
 If the spec contains a Figma URL, `plan.md` MUST repeat it and every FE/UI-related phase file MUST repeat the relevant Figma URL and node IDs in its context section. Do not force Figma into BE-only phases.
 
-## Step 1: Scope Challenge (3 questions)
+## Step 0.5: Cross-Plan Scan
+
+Before creating a plan, perform a scan of existing plans in `plans/*/plan.md` to prevent conflicts and identify dependencies:
+1. Scan all unfinished plans (where status is not `completed` or `cancelled`).
+2. Identify overlapping files in the `Related Code Files` sections.
+3. Check for shared modules or adjacent database tables.
+4. If overlaps or potential conflicts are found:
+   - Present a clear warning to the user.
+   - Propose linking the plans (e.g., stating which plan blocks or depends on which).
+
+## Step 1: Scope Challenge & Mode Selection
 
 Before any planning, ask:
 
-1. **What already exists?** — Scan codebase for reusable code/patterns
-2. **What's the minimum change set?** — Defer everything non-blocking
+1. **What already exists?** — Scan codebase for reusable code/patterns.
+2. **What's the minimum change set?** — Defer everything non-blocking.
 3. **Complexity check** — >8 files or >3 phases? Can we merge/reduce?
 
-Then decide: **fast** (skip research, straight to plan) or **full** (do research first).
+### Workflow Modes
 
-- `--fast` flag → skip research, but DO NOT skip spec-context resolution when a saved spec exists
-- If task is trivial (1 file fix, <20 words) → auto-fast
+Select the planning depth based on task complexity or explicit flags:
 
-## Step 2: Research (full mode only)
+| Mode / Flag | Complexity / Use Case | Research Effort | Validation & Red-Team |
+| :--- | :--- | :--- | :--- |
+| `--fast` | Trivial tasks (1 file fix, <20 words), or quick hotfixes. | None (Skip research). | Basic validation checklist. Skip Red-Team. |
+| `--standard` (default) | Moderate features, refactors, standard tasks. | Standard (1 researcher subagent). | Validation checklist. Basic inline Red-Team questions. |
+| `--hard` | Critical features, database migrations, security changes, or high blast-radius. | High (2 researchers). | Full validation interview + inline Red-Team checklist. |
+| `--deep` | Complex architecture changes, integrations, or major codebase refactoring. | Deep (2 researchers + per-phase codebase scouting). | Full validation interview + inline Red-Team checklist. |
 
-- Read existing docs: `docs/codebase-summary.md`, `code-standards.md`, `system-architecture.md`
-- For unfamiliar areas: spawn 1 `researcher` subagent via Task tool
-- No parallel researchers, no docs-seeker, no sequential-thinking — keep it lean
+### Composable Flags
+- `--tdd`: Can be combined with any mode. Adds a mandatory `## Test Strategy` section to every phase file template.
+
+## Step 2: Research
+
+- Read existing docs: `docs/codebase-summary.md`, `code-standards.md`, `system-architecture.md`.
+- Depending on the selected mode, research as follows:
+  - **Fast mode**: Skip research entirely.
+  - **Standard mode**: Spawn 1 `researcher` subagent via Task tool for unfamiliar areas.
+  - **Hard/Deep modes**: Spawn 2 `researcher` subagents to explore alternative patterns or edge cases. For **Deep mode**, also perform targeted grep searches for each planned phase's target files beforehand.
 
 ## Step 3: Codebase Understanding
 
-- Use grep/glob to find relevant files, existing patterns, API endpoints
-- Check imports in neighboring files to understand conventions
-- Identify files to create/modify/delete
+- Use grep/glob to find relevant files, existing patterns, API endpoints.
+- Check imports in neighboring files to understand conventions.
+- Identify files to create/modify/delete.
 
 ## Step 4: Write Plan (planner subagent)
 
@@ -111,6 +138,8 @@ When spec exists, include:
 Every `plan.md` MUST also include a short `## Context Summary` section that carries forward the spec scope, notable assumptions, and design constraints needed by a fresh-session implementer.
 
 When spec exists, `## Context Summary` should also restate the business goal, workflow placement, and intended before/after state so implementation does not drift into the wrong solution.
+
+Include a `## Validation Log` section for recording responses to validation and Red-Team checklists.
 
 ## Phase Decomposition Rules
 
@@ -157,6 +186,11 @@ effort: ""
 - Modify: `path/to/file`
 - Delete: `path/to/file`
 
+## Test Strategy (Active only if --tdd is set)
+- Unit tests to write: ...
+- Integration / E2E tests: ...
+- Manual verification steps: ...
+
 ## Implementation Steps
 1. ...
 2. ...
@@ -182,17 +216,27 @@ plans/{YYYYMMDD-HHMM}-{slug}/
 └── ...
 ```
 
-## Step 5: Validation Checklist
+## Step 5: Validation & Red-Team Checklist
 
-After plan is written, run through these questions:
+After the plan is written, review it systematically. Record answers and findings under `## Validation Log` in `plan.md`.
 
-1. "Do any phases have dependencies? Does one phase block another?"
-2. "Has the scope drifted? Were any unnecessary features added?"
-3. "Are all file paths in the plan correct?"
-4. "Are the success criteria measurable? ('done' must be observable, not vague)"
-5. "Are there any unverified assumptions?"
+### 1. Standard Validation Checklist
+Ask and answer the following:
+1. **Dependencies**: Do any phases have dependencies? Does one phase block another?
+2. **Scope Drift**: Has the scope drifted? Were any unnecessary features or "nice-to-have" code elements added?
+3. **Paths**: Are all file paths in the plan correct and verified in the codebase?
+4. **Measurability**: Are the success criteria measurable? ("done" must be observable, not vague).
+5. **Assumptions**: Are there any unverified assumptions remaining?
 
-Use the repo's available user-question tool when needed. In this environment, use `question`. Record answers in `## Validation Log` in `plan.md`.
+### 2. Inline Red-Team Checklist (Adversarial Assessment)
+For all non-fast modes, ask the following hostile/adversarial questions:
+1. **Blast Radius & Failure Mode**: What is the worst-case failure mode of this change, and what is its blast radius? How is it contained?
+2. **Fragility**: Which assumptions in this design/architecture are most fragile or likely to change?
+3. **Rollback**: If this fails in production (e.g., database lock, migration error, broken layout), what is the rollback plan?
+4. **Security Vectors**: What security vectors are exposed (auth, input validation, CSRF, rate-limiting, permissions, data exposure)?
+5. **Performance & Bottlenecks**: Are there performance bottlenecks introduced (N+1 queries, heavy table locks, larger JS bundle size)?
+
+Use the repo's available user-question tool when needed. In this environment, use `question`.
 
 ## Step 6: Consistency Check
 
@@ -209,18 +253,26 @@ If any contradictions remain → alert the user. Do not recommend cook until res
 
 ## Step 7: Post-Plan Handoff
 
-After the plan is complete, recommend the next step:
+Recommend the next step based on the risk, scope, and complexity of the plan:
 
-| Scenario | Recommend |
-|---|---|
-| Small plan, low-risk | `cook {path}/plan.md` |
-| Complex plan, needs review | `cook {path}/plan.md` (user reviews first) |
-| User wants to stop | Return plan path |
+| Scenario / Risk | Recommended Next Step | Reason |
+| :--- | :--- | :--- |
+| **Small plan, low-risk** | `cook plans/{YYYYMMDD-HHMM}-{slug}/plan.md` | Skip extra reviews; proceed directly to execution. |
+| **Complex plan, high-risk** | Request user review/approval of the plan first, then `cook`. | High impact requires developer validation before generating code. |
+| **User wants to pause / exit** | Return the complete plan path. | Save plan context for the next session. |
+
+## Subcommand: Archive
+
+To archive a plan (e.g., when requested as `/plan archive` or to archive completed work):
+1. Locate the target plan folder in `plans/`.
+2. Ensure the destination directory `plans/.archive/` exists.
+3. Move the plan directory there: `mv plans/{plan-folder} plans/.archive/`.
+4. Create/update a `lessons-learned.md` log inside `plans/.archive/` summarizing what went well, what failed, and key architectural insights from the implementation.
 
 ## Subagent Usage
 
 | Agent | When |
 |-------|------|
 | `planner` | Always — to write plan files |
-| `researcher` | When the task uses an unfamiliar tech stack or the solution is unclear |
+| `researcher` | When the task uses an unfamiliar tech stack or the solution is unclear (depending on Workflow Mode) |
 | Do not use red-team or code-reviewer for planning |
