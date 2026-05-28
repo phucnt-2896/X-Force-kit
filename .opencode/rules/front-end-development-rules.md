@@ -1,5 +1,5 @@
 ### Front end rules
-
+- You MUST use `inertia-react-development` skill to write the code in FE
 - Always use tailwind class
 - DO NOT hardcode text, using i18n instead
 - Search and prefer use reuseable components `@resources/js/Components` before make new components
@@ -10,3 +10,4 @@
 php artisan i18n:generate
 ```
 to migrate to FE
+- Find matching FE integrate doc in `docs/fe-integrations` first, if existed, that thing can help you implement FE integrate with BE exactly

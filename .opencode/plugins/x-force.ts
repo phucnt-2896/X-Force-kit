@@ -125,11 +125,8 @@ export const XForcePlugin: Plugin = async ({ directory, worktree, client }) => {
       If a simpler approach exists, say so. Push back when warranted.
       If something is unclear, stop. Name what's confusing. Ask.
       
-      ## Help full skill implementation and testing
-      You MUST use "pest-testing" skill to write the test, "laravel-best-practice" skill to write the code in BE Laravel, "inertia-react-development" skill to write the code in FE React, and "code-review" skill to review the code.
-
       ## Project rule
-        ${projectRules}
+      ${projectRules}
        </EXTREMELY_IMPORTANT>
       `;
       const { id, sessionID, messageID } = ref;
@@ -140,7 +137,7 @@ export const XForcePlugin: Plugin = async ({ directory, worktree, client }) => {
         sessionID,
         messageID,
       });
-      // log.info("Injecting X-Force message context", { output});
+      log.info("Injecting X-Force message context", { output});
     }
   }
 };
