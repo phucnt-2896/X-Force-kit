@@ -261,6 +261,34 @@ Recommend the next step based on the risk, scope, and complexity of the plan:
 | **Complex plan, high-risk** | Request user review/approval of the plan first, then `cook`. | High impact requires developer validation before generating code. |
 | **User wants to pause / exit** | Return the complete plan path. | Save plan context for the next session. |
 
+### Actionable Next-Step Suggestion (mandatory)
+
+After the plan is finalized, always present the next step in this exact format:
+
+```
+✅ Plan created: plans/{YYYYMMDD-HHMM}-{slug}/plan.md
+   Phases: N phase(s)
+
+👉 Next step — implement the plan:
+/cook plans/{YYYYMMDD-HHMM}-{slug}/plan.md
+```
+
+For high-risk plans, present it as:
+
+```
+✅ Plan created: plans/{YYYYMMDD-HHMM}-{slug}/plan.md
+   Phases: N phase(s)
+   ⚠️ High-risk — please review the plan before proceeding.
+
+👉 After review, implement with:
+/cook plans/{YYYYMMDD-HHMM}-{slug}/plan.md
+```
+
+Rules:
+- Use the **actual plan directory path**, not a placeholder
+- Always include phase count for quick context
+- Do NOT say "you can now run cook" without providing the full command
+
 ## Subcommand: Archive
 
 To archive a plan (e.g., when requested as `/plan archive` or to archive completed work):

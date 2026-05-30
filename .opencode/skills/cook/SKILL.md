@@ -142,8 +142,20 @@ Warnings and suggestions: fix if time allows, not blocking.
 
 1. **Sync-back ALL phases** — sweep every `phase-*.md` in plan dir, mark completed items `[ ] → [x]` based on work done (including earlier phases, not just current). Update `plan.md` status/progress from actual checkbox state.
 2. Update plan status to `completed`
-3. Offer commit via `git` skill
-4. Write `journal` entry
+3. Write `journal` entry
+
+### Actionable Next-Step Suggestion (mandatory)
+
+After finalization:
+
+1. **Automatically trigger the `commit-message` skill** (using the git diff and the context of the implemented plan/phases).
+2. **Present the suggested commit message options directly to the user** in the final response so they can inspect and use them immediately without having to run any command.
+
+Rules:
+
+- Show the conventional commit message options immediately.
+- If changes span multiple scopes/types, present split commit message options.
+- Do NOT instruct the user to run `/commit-message`. Produce the commit suggestions yourself right away.
 
 ## Subagents Used
 

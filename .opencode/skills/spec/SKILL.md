@@ -335,7 +335,23 @@ If the user corrects it:
 After approval:
 - save the final spec file to `docs/YYYY-MM-DD-HHMM/<slug>-spec.md` unless the user explicitly asked for chat-only
 - mention the saved path in the handoff summary
-- recommend `plan` or `cook` as the next step
+- recommend the next step with a **concrete, copy-pasteable command**
+
+### Actionable Next-Step Suggestion (mandatory)
+
+After the spec file is saved, always present the next step in this exact format:
+
+```
+✅ Spec saved: docs/specs/YYYY-MM-DD-HHMM/<slug>-spec.md
+
+👉 Next step — create an implementation plan:
+/plan <one-line task summary> docs/specs/YYYY-MM-DD-HHMM/<slug>-spec.md
+```
+
+Rules:
+- Replace `<one-line task summary>` with a concise description derived from the spec's request summary
+- Use the **actual saved file path**, not a placeholder
+- Do NOT say "you can now run plan" without providing the full command
 
 ## Output Style
 
