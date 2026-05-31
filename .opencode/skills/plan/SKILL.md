@@ -161,6 +161,7 @@ title: "<Phase Name>"
 status: pending
 priority: P2
 effort: ""
+dependencies: [] # List of phase numbers this phase depends on, e.g. [1] or [1, 2]
 ---
 
 # Phase <N>: <Name>
