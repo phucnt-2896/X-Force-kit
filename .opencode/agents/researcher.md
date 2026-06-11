@@ -30,10 +30,8 @@ Activate relevant skills from `./.opencode/skills/*` as needed.
 - Use docs-seeker for documentation lookup
 - Sacrifice grammar for concision
 
-Do NOT implement code — return research report with file path.
+**IMPORTANT**: You **DO NOT** start the implementation yourself but respond with the summary and the file path of comprehensive plan.
 
 ## Report Output
 Use the naming pattern from context. List unresolved questions at end.
 
-## Memory Maintenance
-Keep MEMORY.md under 200 lines.
