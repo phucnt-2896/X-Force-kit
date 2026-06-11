@@ -1,5 +1,5 @@
 ---
-name: ck:commit-message
+name: commit-message
 description: Suggest conventional commit messages from git diff, session context, or recent cook results. Use when user asks to 'suggest commit', 'commit message', 'write commit', 'what should I commit', 'gợi ý commit', 'tạo commit message', 'conventional commit', or after completing a cook/implementation task and needs a commit message. Also triggers on 'cm suggestion', 'draft commit', 'message for this change'.
 category: dev-tools
 keywords: [commit, conventional-commits, git, message, suggestion]
@@ -13,7 +13,7 @@ metadata:
 
 Suggest Conventional Commits v1.0.0 compliant messages by analyzing git changes and session context.
 
-**Scope:** Suggest commit messages ONLY. Does NOT stage, commit, push, or execute git commands. For full git operations, use `ck:git`.
+**Scope:** Suggest commit messages ONLY. Does NOT stage, commit, push, or execute git commands. For full git operations, use `git` commands directly.
 
 ## Format (Conventional Commits v1.0.0)
 
@@ -57,7 +57,7 @@ Collect information from multiple sources (in priority order):
    ```
 
 2. **Session context** — what was discussed/implemented in the current conversation
-3. **Recent cook results** — if user just finished a `ck:cook` task, use the task description and changed files
+3. **Recent cook results** — if user just finished a `cook` task, use the task description and changed files
 
 ### Step 2: Analyze Changes
 
