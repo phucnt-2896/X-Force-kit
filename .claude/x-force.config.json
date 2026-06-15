@@ -1,10 +1,5 @@
 {
   "context": {
-    "projectRuleContentFiles": [
-      "./.claude/rules/project-context.md",
-      "./.claude/rules/front-end-development.md",
-      "./.claude/rules/back-end-development.md"
-    ],
     "responseLanguage": "vn",
     "codingLevel": "junior",
     "blockedDirs": [

@@ -27,7 +27,10 @@ try {
   const contextBlock = buildUserPromptContext(config, repoRoot, logger);
   markPromptInjected(repoRoot, sessionKey);
 
-  logger.info("Injected Claude UserPromptSubmit context", { sessionKey });
+  logger.info("Injected Claude UserPromptSubmit context", {
+    sessionKey,
+    contextLength: contextBlock.length,
+  });
   writeJson({
     continue: true,
     suppressOutput: true,

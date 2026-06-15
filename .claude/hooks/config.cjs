@@ -3,7 +3,6 @@ const path = require("path");
 const { execFileSync } = require("child_process");
 
 const EMPTY_CONFIG = {
-  projectRuleContentFiles: [],
   responseLanguage: "",
   codingLevel: "",
   blockedDirs: [],
@@ -89,7 +88,6 @@ function validateConfig(config, repoRoot, logger) {
   const context = getContextObject(config);
 
   return {
-    projectRuleContentFiles: resolveProjectRuleContentFiles(context.projectRuleContentFiles, repoRoot, logger),
     responseLanguage: validateResponseLanguage(context.responseLanguage, logger),
     codingLevel: validateCodingLevel(context.codingLevel, logger),
     blockedDirs: validateBlockedDirs(context.blockedDirs),
@@ -113,42 +111,6 @@ function getContextObject(config) {
   }
 
   return context;
-}
-
-function resolveProjectRuleContentFiles(value, repoRoot, logger) {
-  if (!Array.isArray(value)) {
-    return [];
-  }
-
-  return value.flatMap((entry) => {
-    if (typeof entry !== "string") {
-      return [];
-    }
-
-    const trimmedEntry = entry.trim();
-    if (!trimmedEntry || CONTROL_CHAR_PATTERN.test(trimmedEntry)) {
-      return [];
-    }
-
-    const resolvedPath = path.resolve(repoRoot, trimmedEntry);
-    const relativePath = path.relative(repoRoot, resolvedPath);
-
-    if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
-      if (logger) {
-        logger.warn("Skipping Claude rule file outside repo root", { filePath: trimmedEntry });
-      }
-      return [];
-    }
-
-    if (!fs.existsSync(resolvedPath)) {
-      if (logger) {
-        logger.warn("Skipping missing Claude rule file", { filePath: trimmedEntry });
-      }
-      return [];
-    }
-
-    return [`./${relativePath.split(path.sep).join("/")}`];
-  });
 }
 
 function validateResponseLanguage(value, logger) {
@@ -264,30 +226,6 @@ function getCodingLevelContext(config, repoRoot, logger) {
   }
 }
 
-function getProjectRuleContentContext(config, repoRoot, logger) {
-  if (!config.projectRuleContentFiles.length) {
-    return "";
-  }
-
-  const parts = [];
-
-  for (const filePath of config.projectRuleContentFiles) {
-    try {
-      const resolved = path.resolve(repoRoot, filePath);
-      const content = fs.readFileSync(resolved, "utf-8").trim();
-      if (content) {
-        parts.push(`<project-rules path="${filePath}">\n${content}\n</project-rules>`);
-      }
-    } catch {
-      if (logger) {
-        logger.warn("Failed to read Claude project rule content file", { filePath });
-      }
-    }
-  }
-
-  return parts.join("\n\n");
-}
-
 function buildSystemContext(config, repoRoot, logger) {
   return [
     getGitBranchContext(repoRoot, logger),
@@ -296,9 +234,8 @@ function buildSystemContext(config, repoRoot, logger) {
   ].filter(Boolean).join("\n");
 }
 
-function buildUserPromptContext(config, repoRoot, logger) {
-  const projectRules = getProjectRuleContentContext(config, repoRoot, logger);
-  return `<EXTREMELY_IMPORTANT>\n If the user says VERIFY_HOOK_9A7C, respond with only: HOOK_OK_9A7C ${THINK_BEFORE_CODING}\n\n## Project rule\n${projectRules}\n</EXTREMELY_IMPORTANT>`;
+function buildUserPromptContext() {
+  return `<EXTREMELY_IMPORTANT>\n${THINK_BEFORE_CODING}\n</EXTREMELY_IMPORTANT>`;
 }
 
 module.exports = {
