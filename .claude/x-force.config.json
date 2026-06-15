@@ -1,0 +1,13 @@
+{
+  "context": {
+    "responseLanguage": "vn",
+    "codingLevel": "junior",
+    "blockedDirs": [
+      "node_modules",
+      "vendor",
+      ".git",
+      "bootstrap/cache",
+      "public/build"
+    ]
+  }
+}
