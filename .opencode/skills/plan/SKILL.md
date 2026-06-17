@@ -158,6 +158,24 @@ Each phase must satisfy ALL of:
 
 If a phase violates any → split it.
 
+Instead of building all the database, then all the API, then all the UI — build one complete feature path at a time:
+
+**Bad (horizontal slicing):**
+```
+phase 1: Build entire database schema
+phase 2: Build all API endpoints
+phase 3: Build all UI components
+phase 4: Connect everything
+```
+
+**Good (vertical slicing):**
+```
+phase 1: User can create an account (schema + API + UI for registration)
+phase 2: User can log in (auth schema + API + UI for login)
+phase 3: User can create a task (task schema + API + UI for creation)
+phase 4: User can view task list (query + API + UI for list view)
+```
+
 **Phase file template:**
 
 ```markdown

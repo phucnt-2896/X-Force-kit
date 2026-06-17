@@ -100,7 +100,7 @@ export const XForcePlugin: Plugin = async ({ directory, worktree, client }) => {
         if (systemContext) {
           output.system.unshift(systemContext);
         }
-        // log.info("Injecting X-Force chat system context", {output});
+        log.info("Injecting X-Force chat system context", {output});
       } catch (error) {
         log.error("Failed to inject X-Force chat system context", {
           error: error instanceof Error ? error.message : String(error),
@@ -108,6 +108,7 @@ export const XForcePlugin: Plugin = async ({ directory, worktree, client }) => {
       }
     },
     "experimental.chat.messages.transform": async (input, output) => {
+      return;
       const firstUser = output.messages.find(m => m.info.role === 'user');
       if (!firstUser || !firstUser.parts.length) return;
       if (firstUser.parts.some(p => p.type === 'text' && p.text.includes('EXTREMELY_IMPORTANT'))) return;

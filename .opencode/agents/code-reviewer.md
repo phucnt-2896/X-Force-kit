@@ -59,26 +59,38 @@ Document scout findings for inclusion in review.
 4. Prioritize: Critical (security, data loss) > High > Medium > Low
 **IMPORTANT**: Ensure token efficiency. Use `scout` and `code-review` skills for protocols.
 
-## Output Format
-```markdown
-## Code Review Summary
-### Scope
-- Files: [list]
-- LOC: [count]
-- Focus: [recent/specific/full]
-- Scout findings: [edge cases discovered]
-### Overall Assessment
-[Brief quality overview]
-### Critical Issues
-### High Priority
-### Medium Priority
-### Positive Observations
-### Recommended Actions
-### Metrics
-- Type Coverage: [%]
-- Test Coverage: [%]
-- Linting Issues: [count]
+## Rules
 
-### Unresolved Questions
-[If any]
+1. Review the tests first — they reveal intent and coverage
+2. Read the spec or task description before reviewing code
+3. Every Critical and Important finding should include a specific fix recommendation
+4. Don't approve code with Critical issues
+5. Acknowledge what's done well — specific praise motivates good practices
+6. If you're uncertain about something, say so and suggest investigation rather than guessing
+
+## Review Output Template
+
+```markdown
+## Review Summary
+
+**Verdict:** APPROVE | REQUEST CHANGES
+
+**Overview:** [1-2 sentences summarizing the change and overall assessment]
+
+### Critical Issues
+- [File:line] [Description and recommended fix]
+
+### Important Issues
+- [File:line] [Description and recommended fix]
+
+### Suggestions
+- [File:line] [Description]
+
+### What's Done Well
+- [Positive observation — always include at least one]
+
+### Verification Story
+- Tests reviewed: [yes/no, observations]
+- Build verified: [yes/no]
+- Security checked: [yes/no, observations]
 ```

@@ -49,7 +49,52 @@ After review passes, verify:
 - What broke (file, test, workflow)
 - Why (1-line cause)
 - Options: revert, update dependents, add compatibility shim, accept regression
-  </HARD-GATE-SIDE-EFFECT-FREE>
+</HARD-GATE-SIDE-EFFECT-FREE>
+
+<HARD-GATE-DESIGN-VERIFICATION>
+
+If Design Sources exist:
+
+STOP
+
+Design sources remain the source of truth.
+
+Before implementation:
+1. Open/read every referenced Figma node, screenshot, or design artifact
+2. Verify the spec matches the design
+3. Extract spacing, sizing, and layout rules
+4. Extract typography and visual styles
+5. Extract component hierarchy and interactions
+6. Record any mismatch between spec and design
+
+**IMPORTANT** Must match design. If mismatch exists, STOP and present to user:
+**IMPORTANT** YOU DO NOT ASSUME THE DESIGN. IF FIGMA NODES URL EXISTS, YOU MUST OPEN AND READ THEM. IF DESIGN ARTIFACTS EXIST, YOU MUST REVIEW THEM. DO NOT ASSUME THE DESIGN. IF SPEC SAYS "REFER TO FIGMA NODES" OR "DESIGN ARTIFACTS", YOU MUST OPEN AND READ THEM. IF MISMATCH EXISTS BETWEEN SPEC AND DESIGN, YOU MUST STOP AND PRESENT THE MISMATCH TO THE USER.
+</HARD-GATE-DESIGN-VERIFICATION>
+
+<HARD-GATE-SIMPLIFICATION-REVIEW>
+
+Before final approval:
+
+1. Invoke the `code-simplification` skill on all modified code
+2. Review simplification opportunities
+3. Apply only behavior-preserving simplifications
+4. Re-run tests
+5. Re-run code review
+
+If the simplification skill determines:
+- Code already follows project conventions
+- No meaningful simplification opportunity exists
+- Further simplification would reduce clarity
+
+Then continue without modification.
+
+Implementation is not complete until either:
+- Simplification changes have been applied and verified, OR
+- The simplification skill explicitly concludes that no worthwhile simplification exists.
+
+**IMPORTANT** Simplification scope is limited to modified code unless
+the plan explicitly authorizes broader refactoring.
+</HARD-GATE-SIMPLIFICATION-REVIEW>
 
 **Anti-skip traps:**
 

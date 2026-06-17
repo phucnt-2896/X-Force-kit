@@ -29,6 +29,7 @@ Do NOT invoke any implementation skill, write any code, scaffold any project, or
 - before `plan` or `cook` for a new feature, page, flow, CRUD surface, or meaningful UI change
 - when the task sounds clear at first glance but still has product or workflow ambiguity
 - when a request needs context, business purpose, workflow placement, or user-behavior discovery
+- The ask is missing at least one of: **who** the user is, **why** they want it, what **success** looks like, what the binding **constraint** is
 
 ## Anti-Pattern: "This Is Too Simple To Need A Design"
 
