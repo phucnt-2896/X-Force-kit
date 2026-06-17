@@ -70,3 +70,7 @@ After approval:
 
 This project running in docker container (xs_php, xs_node)
 When you run test, npm build you should running in side container
+
+## Project Lang 
+
+This project only support 2 languese (ja and en). Ja is primary langue

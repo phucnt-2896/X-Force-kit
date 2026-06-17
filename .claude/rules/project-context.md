@@ -79,3 +79,7 @@ After approval:
 
 - This project runs in docker containers (`xs_php`, `xs_node`).
 - When running tests or npm builds, execute them inside the side container.
+
+## Project Lang 
+
+This project only support 2 languese (ja and en). Ja is primary langue

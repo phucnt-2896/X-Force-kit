@@ -1,5 +1,5 @@
 ---
-name: ck:watzup
+name: watzup
 description: "Generate session hand-off summaries from recent changes — what shipped, what's in flight, what's next. Use at end-of-day, before context handoff to a teammate or new session, or to produce a quick progress-tracking report on any active project."
 ---
 

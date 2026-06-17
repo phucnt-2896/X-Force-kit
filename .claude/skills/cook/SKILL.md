@@ -53,22 +53,7 @@ After review passes, verify:
 
 <HARD-GATE-DESIGN-VERIFICATION>
 
-If Design Sources exist:
-
-STOP
-
-Design sources remain the source of truth.
-
-Before implementation:
-1. Open/read every referenced Figma node, screenshot, or design artifact
-2. Verify the spec matches the design
-3. Extract spacing, sizing, and layout rules
-4. Extract typography and visual styles
-5. Extract component hierarchy and interactions
-6. Record any mismatch between spec and design
-
-**IMPORTANT** Must match design. If mismatch exists, STOP and present to user:
-**IMPORTANT** YOU DO NOT ASSUME THE DESIGN. IF FIGMA NODES URL EXISTS, YOU MUST OPEN AND READ THEM. IF DESIGN ARTIFACTS EXIST, YOU MUST REVIEW THEM. DO NOT ASSUME THE DESIGN. IF SPEC SAYS "REFER TO FIGMA NODES" OR "DESIGN ARTIFACTS", YOU MUST OPEN AND READ THEM. IF MISMATCH EXISTS BETWEEN SPEC AND DESIGN, YOU MUST STOP AND PRESENT THE MISMATCH TO THE USER.
+If a Figma URL/node exists, you MUST read the design from Figma MCP before implementing UI. If `figma_get_design_context` says the design is too large, incomplete, truncated, or instructs you to read sublayers/nodes in more detail, you MUST stop and continue reading the required child nodes until the UI structure is fully clear. You MUST NOT guess, simplify, normalize, or "translate" the UI into a generic pattern before reading the detailed nodes. If the detailed nodes still do not provide enough clarity, stop and report exactly what is still unclear instead of implementing from assumption.
 </HARD-GATE-DESIGN-VERIFICATION>
 
 <HARD-GATE-SIMPLIFICATION-REVIEW>
