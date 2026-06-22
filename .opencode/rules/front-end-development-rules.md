@@ -5,7 +5,20 @@
 - Search and prefer use reuseable components `@resources/js/Components` before make new components
 - Read `@resources/js/Components/Form/README.md` if you need create a form, then decided to how you write the form component
 - Before you write any code in front-end, make sure you always read figma nodes (if have) again to know spacing, padding, margin..
+<HARD_GATE>
 - **IMPORTANT** HARD GATE: If a Figma URL/node exists, you MUST read the design from Figma MCP before implementing UI. If `figma_get_design_context` says the design is too large, incomplete, truncated, or instructs you to read sublayers/nodes in more detail, you MUST stop and continue reading the required child nodes until the UI structure is fully clear. You MUST NOT guess, simplify, normalize, or "translate" the UI into a generic pattern before reading the detailed nodes. If the detailed nodes still do not provide enough clarity, stop and report exactly what is still unclear instead of implementing from assumption.
+
+Every UI task must pass visual validation.
+
+For every implemented screen:
+0. Invoke `browser-testing-with-devtools` & `local-browser-login-2fa` skills to run the visual validation process.
+1. Capture Figma screenshot.
+2. Capture browser screenshot.
+3. Compare them.
+4. List visual differences.
+5. Fix differences.
+6. Repeat until major visual differences are gone.
+</HARD_GATE>
 - 1 source of truth i18n, define on `lang` folder (BE) and then run
 ```php
 php artisan i18n:generate
