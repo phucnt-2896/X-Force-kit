@@ -2,7 +2,7 @@
 
 ## Front-End Rules
 
-- You must use `inertia-react-development` skill to write front-end code.
+- You must use `x:inertia-react-development` skill to write front-end code.
 - Always use Tailwind classes.
 - Do not hardcode text. Use i18n instead.
 - Search and prefer reusable components under `@resources/js/Components` before creating new ones.
@@ -13,7 +13,7 @@
 Every UI task must pass visual validation.
 
 For every implemented screen:
-0. Invoke `browser-testing-with-devtools` & `local-browser-login-2fa` skills to run the visual validation process.
+0. Invoke `x:browser-testing-with-devtools` & `x:local-browser-login-2fa` skills to run the visual validation process.
 1. Capture Figma screenshot.
 2. Capture browser screenshot.
 3. Compare them.

@@ -54,7 +54,7 @@ You are a **CTO-level advisor** challenging assumptions and surfacing options th
 
 ## Final Step
 Ask user: create detailed implementation plan?
-- Yes → `plan --fast` or `plan` with context
+- Yes → `x:plan --fast` or `x:plan` with context
 - No → End
 
 ### Report Content

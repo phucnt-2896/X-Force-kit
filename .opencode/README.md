@@ -8,7 +8,7 @@ This document describes the workflow skills and plugin features configured for t
 
 The system defines specialized skills to guide AI agents through structured development pipelines.
 
-### 🔍 spec
+### 🔍 x:spec
 
 - **Purpose**: Runs a spec-gated interview to clarify requirements, business goals, and visual details before planning or implementation.
 - **Key Features**:
@@ -18,7 +18,7 @@ The system defines specialized skills to guide AI agents through structured deve
   - **Planning-Ready Standard**: Captures the actor, trigger, before/after states, and success criteria to prevent downstream planning from guessing business logic.
   - **Output**: Saves the approved spec to `docs/specs/YYYY-MM-DD-HHMM/<slug>-spec.md`.
 
-### 📋 plan
+### 📋 x:plan
 
 - **Purpose**: Creates structured implementation plans with codebase analysis and risk assessment.
 - **Workflow Modes**:
@@ -34,7 +34,7 @@ The system defines specialized skills to guide AI agents through structured deve
   - **Red-Team Checklist**: Questions blast radius, fragility, rollback plans, security vectors, and performance bottlenecks.
   - **Output**: Produces `plans/{date}-{slug}/plan.md` and phase files.
 
-### 🍳 cook
+### 🍳 x:cook
 
 - **Purpose**: Executes phase-by-phase code implementation based on plans or task descriptions.
 - **Key Features**:
@@ -43,14 +43,14 @@ The system defines specialized skills to guide AI agents through structured deve
   - **Review Cycle Guard**: Limits review iterations to 3 cycles. Critical issues (security, performance bottlenecks, architectural violations) block merges. Escalates to the user if unresolved after 3 cycles.
   - **Finalization**: Syncs checklists back to phase files, updates plan status, offers git commits, and triggers journal writing.
 
-### 🔎 code-review
+### 🔎 x:code-review
 
 - **Purpose**: Performs adversarial code quality reviews on PRs, commits, or pending changes.
 - **Key Features**:
   - **3-Stage Process**: Spec compliance mapping (PASS/MISSING/EXTRA), two-pass quality check (Critical/Informational), and adversarial Red-Teaming (detecting false assumptions and memory leaks).
   - **Verification Gate**: Enforces running test suites and reporting exact execution outputs before claiming completion.
 
-### 🐛 debug
+### 🐛 x:debug
 
 - **Purpose**: Investigates bugs, test failures, and unexpected behaviors using root cause analysis (RCA).
 - **Key Features**:
@@ -58,38 +58,38 @@ The system defines specialized skills to guide AI agents through structured deve
   - **Hypothesis Testing**: Generates 2-3 competing explanations and tests each systematically.
   - **Output**: Produces a structured debug report outlining immediate vs. underlying causes, timeline, and mitigation options.
 
-### 🔧 fix
+### 🔧 x:fix
 
 - **Purpose**: Applies targeted bug fixes based on debug reports.
 - **Key Features**:
   - **Regression Testing**: Ensures a test is written reproducing the bug to prevent future regressions.
-  - **Scope Verification**: If a fix modifies >3 files or involves complex logic, it triggers the `code-review` workflow first.
+  - **Scope Verification**: If a fix modifies >3 files or involves complex logic, it triggers the `x:code-review` workflow first.
 
-### 🔭 scout
+### 🔭 x:scout
 
 - **Purpose**: Discovers relevant files, modules, and API endpoints across directories.
 - **Key Features**:
   - **Parallel Execution**: Spawns up to 3 parallel subagents to search segments of the codebase simultaneously.
   - **Output**: Aggregates findings into a single report containing relevant file paths and outstanding questions.
 
-### 📓 journal
+### 📓 x:journal
 
 - **Purpose**: Captures technical decisions, architectural trade-offs, and lessons learned.
 - **Key Features**:
   - **Honest Diaries**: Documents the root cause of issues, choices made/rejected, and emotional realities of debugging sessions.
   - **Output**: Written to `./docs/journals/`.
 
-### 📊 watzup
+### 📊 x:watzup
 
 - **Purpose**: Generates session hand-off summaries.
 - **Key Features**:
   - **Summary Only**: Analyzes current branch and recent commits to report what shipped, what is in flight, and what is next without making any changes.
 
-### 🌐 agent-browser
+### 🌐 x:agent-browser
 
 - **Purpose**: Automates browser tasks like form filling, clicking, scraping, and visual testing via CDP accessibility-tree snapshots.
 
-### 📐 project-organization
+### 📐 x:project-organization
 
 - **Purpose**: Enforces standardized naming conventions and directory locations (timestamped plans, reports, journals, and evergreen docs).
 

@@ -47,11 +47,11 @@ The test: Every changed line should trace directly to the user's request.
 
 The agent should automatically map user intent to skills:
 
-- Feature / new functionality → `spec` then `plan`, `cook`
-- Planning / breakdown → `plan`
-- Bug / failure / unexpected behavior → `debug`
-- Code review → `code-review`
-- Refactoring / simplification → `code-simplification`
+- Feature / new functionality → `x:spec` then `x:plan`, `x:cook`
+- Planning / breakdown → `x:plan`
+- Bug / failure / unexpected behavior → `x:debug`
+- Code review → `x:code-review`
+- Refactoring / simplification → `x:code-simplification`
 
 ### Execution Model
 
@@ -60,7 +60,7 @@ For every request:
 1. Determine if any skill applies (even 1% chance)
 2. Invoke the appropriate skill using the `skill` tool
 3. Follow the skill workflow strictly
-4. Only proceed to implementation after required steps (spec, plan, etc.) are complete
+4. Only proceed to implementation after required steps (`x:spec`, `x:plan`, etc.) are complete
 
 ### Anti-Rationalization
 

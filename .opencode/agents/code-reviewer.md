@@ -57,7 +57,7 @@ Document scout findings for inclusion in review.
 
 3. Check: Structure → Logic → Types → Performance → Security
 4. Prioritize: Critical (security, data loss) > High > Medium > Low
-**IMPORTANT**: Ensure token efficiency. Use `scout` and `code-review` skills for protocols.
+**IMPORTANT**: Ensure token efficiency. Use `x:scout` and `x:code-review` skills for protocols.
 
 ## Rules
 

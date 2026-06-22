@@ -21,8 +21,8 @@ Whenever a task touches backend logic that reads from DB, writes to DB, builds q
 - Do not assume that a read-only screen is safe to implement without approved mapping.
 - Because this is a legacy renewal project, table/column meaning may be confusing and must be confirmed with the user before implementation.
 
-**IMPORTANT** if you are making `spec` or `plan`, you MUST scout DB, model and then propose DB mapping for user approve. If `spec` and `plan` file is clearly, we don't need rework => save the time
-**IMPORTANT** You MUST add `## propose DB mapping` in `spec` file if any. User need to review it.
+**IMPORTANT** if you are making `x:spec` or `x:plan`, you MUST scout DB, model and then propose DB mapping for user approve. If `x:spec` and `x:plan` file is clearly, we don't need rework => save the time
+**IMPORTANT** You MUST add `## propose DB mapping` in `x:spec` file if any. User need to review it.
 
 ### Step 1: Analyze spec language
 
