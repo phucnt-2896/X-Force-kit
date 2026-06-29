@@ -70,6 +70,29 @@ After this, submitting the Admin/Candidate login form only needs a valid
 To choose an Agent or Candidate that fits a test condition, query the DB.
 See `references/accounts-and-auth-override.md` for ready-to-run queries.
 
+### HARD RULE — always pick the NEWEST account, never the oldest
+
+The rows at the **top** of `agents` / `candidates` (smallest `id`) are the
+oldest seed data — frequently incomplete or broken, and they make UI/UX
+testing fail. Do **not** grab the first row.
+
+- Always filter by your test condition **AND** `ORDER BY id DESC` (newest
+  first). Newer data is more complete.
+- Never use a query that returns an arbitrary/first row
+  (e.g. `Agent::query()->value('email')` picks the oldest — forbidden).
+
+### STOP after 3 failed accounts — don't burn tokens
+
+If you have tried **3 accounts** and still cannot either log in OR find a user
+that actually has the data needed to test the target UI/UX:
+
+- **STOP.** Do not keep trying more accounts.
+- Report to the user: which 3 accounts (emails) you tried, what failed for
+  each (login failed / logged in but no data for this screen), and ask the
+  user to provide a working account or point you to the right one.
+
+This avoids wasting tokens cycling through broken legacy records.
+
 ## Step 3 — Log in via the browser
 
 Use the **chrome-devtools MCP** tools (already configured; matches the project
